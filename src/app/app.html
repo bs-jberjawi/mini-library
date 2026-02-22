@@ -3,79 +3,8 @@
     <span class="material-icons spin">local_library</span>
     <p>Loading MiniLibrary...</p>
   </div>
-} @else if (supabase.isAuthenticated()) {
-  <mat-sidenav-container class="app-container">
-    <mat-sidenav #sidenav mode="side" opened class="sidenav" [fixedInViewport]="true">
-      <div class="sidenav-header">
-        <span class="material-icons">local_library</span>
-        <span class="app-name">MiniLibrary</span>
-      </div>
-      <mat-nav-list>
-        <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
-          <mat-icon matListItemIcon>dashboard</mat-icon>
-          <span matListItemTitle>Dashboard</span>
-        </a>
-        <a mat-list-item routerLink="/books" routerLinkActive="active">
-          <mat-icon matListItemIcon>menu_book</mat-icon>
-          <span matListItemTitle>Books</span>
-        </a>
-        <a mat-list-item routerLink="/my-checkouts" routerLinkActive="active">
-          <mat-icon matListItemIcon>history</mat-icon>
-          <span matListItemTitle>My Checkouts</span>
-        </a>
-        @if (supabase.isAdmin()) {
-          <a mat-list-item routerLink="/manage-users" routerLinkActive="active">
-            <mat-icon matListItemIcon>people</mat-icon>
-            <span matListItemTitle>Manage Users</span>
-          </a>
-        }
-      </mat-nav-list>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-      <mat-toolbar color="primary" class="app-toolbar">
-        <button mat-icon-button (click)="sidenav.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span class="toolbar-spacer"></span>
-
-        <!-- Theme toggle -->
-        <button mat-icon-button (click)="theme.toggle()" [matTooltip]="theme.isDark() ? 'Light mode' : 'Dark mode'">
-          <mat-icon>{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
-        </button>
-
-        <!-- User menu -->
-        <button mat-icon-button [matMenuTriggerFor]="userMenu">
-          @if (supabase.profile()?.avatar_url) {
-            <img [src]="supabase.profile()?.avatar_url" class="toolbar-avatar" alt="Avatar">
-          } @else {
-            <mat-icon>account_circle</mat-icon>
-          }
-        </button>
-        <mat-menu #userMenu="matMenu">
-          <div class="user-menu-header" mat-menu-item disabled>
-            <strong>{{ supabase.profile()?.full_name || 'User' }}</strong>
-            <br>
-            <small>{{ supabase.profile()?.email }}</small>
-            <br>
-            <span class="role-badge role-{{ supabase.userRole() }}">{{ supabase.userRole() | uppercase }}</span>
-          </div>
-          <button mat-menu-item (click)="signOut()">
-            <mat-icon>logout</mat-icon>
-            <span>Sign Out</span>
-          </button>
-        </mat-menu>
-      </mat-toolbar>
-
-      <main class="main-content">
-        <router-outlet />
-      </main>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-
-  <app-chatbot />
-  <app-notifications />
 } @else {
   <router-outlet />
-  <app-notifications />
 }
+
+<app-notifications />
