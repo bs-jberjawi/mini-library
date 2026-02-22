@@ -108,15 +108,10 @@ export class LoginComponent {
   private router = inject(Router);
 
   constructor() {
-    // Watch for auth changes and redirect if already logged in
-    const checkAuth = setInterval(() => {
-      if (!this.supabase.loading() && this.supabase.isAuthenticated()) {
-        clearInterval(checkAuth);
-        this.router.navigate(['/dashboard']);
-      }
-    }, 100);
-    // Stop checking after 10 seconds
-    setTimeout(() => clearInterval(checkAuth), 10000);
+    // If already authenticated, redirect immediately
+    if (this.supabase.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   async signIn() {

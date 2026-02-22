@@ -3,9 +3,7 @@
     <span class="material-icons spin">local_library</span>
     <p>Loading MiniLibrary...</p>
   </div>
-} @else if (!supabase.isAuthenticated()) {
-  <router-outlet />
-} @else {
+} @else if (supabase.isAuthenticated()) {
   <mat-sidenav-container class="app-container">
     <mat-sidenav #sidenav mode="side" opened class="sidenav" [fixedInViewport]="true">
       <div class="sidenav-header">
@@ -75,7 +73,9 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 
-  <!-- Floating AI chatbot -->
   <app-chatbot />
+  <app-notifications />
+} @else {
+  <router-outlet />
   <app-notifications />
 }
