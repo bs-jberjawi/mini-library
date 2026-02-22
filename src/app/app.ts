@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,6 +28,23 @@ import { NotificationsComponent } from './components/notifications/notifications
 export class App {
   supabase = inject(SupabaseService);
   theme = inject(ThemeService);
+  private router = inject(Router);
+
+  constructor() {
+    // React to auth state changes for navigation
+    effect(() => {
+      const loading = this.supabase.loading();
+      const authenticated = this.supabase.isAuthenticated();
+      if (loading) return;
+
+      const path = window.location.pathname;
+      if (authenticated && (path === '/login' || path === '/')) {
+        this.router.navigate(['/dashboard']);
+      } else if (!authenticated && path !== '/login') {
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 
   async signOut() {
     await this.supabase.signOut();

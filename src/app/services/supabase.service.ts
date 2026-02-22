@@ -1,5 +1,4 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, signal, computed } from '@angular/core';
 import { createClient, SupabaseClient, Session, User } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { Profile } from '../models/interfaces';
@@ -7,7 +6,6 @@ import { Profile } from '../models/interfaces';
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
   private supabase: SupabaseClient;
-  private router = inject(Router);
 
   private _session = signal<Session | null>(null);
   private _profile = signal<Profile | null>(null);
@@ -34,22 +32,12 @@ export class SupabaseService {
 
   private async init() {
     // Register listener FIRST so no events are missed
-    this.supabase.auth.onAuthStateChange(async (event, session) => {
+    this.supabase.auth.onAuthStateChange(async (_event, session) => {
       this._session.set(session);
       if (session?.user) {
         await this.loadProfile(session.user.id);
-        // On sign-in via OAuth redirect, navigate to dashboard
-        if (event === 'SIGNED_IN') {
-          const path = window.location.pathname;
-          if (path === '/login' || path === '/') {
-            this.router.navigate(['/dashboard']);
-          }
-        }
       } else {
         this._profile.set(null);
-        if (event === 'SIGNED_OUT') {
-          this.router.navigate(['/login']);
-        }
       }
     });
 
