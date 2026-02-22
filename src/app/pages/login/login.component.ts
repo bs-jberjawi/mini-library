@@ -107,6 +107,18 @@ export class LoginComponent {
   private supabase = inject(SupabaseService);
   private router = inject(Router);
 
+  constructor() {
+    // Watch for auth changes and redirect if already logged in
+    const checkAuth = setInterval(() => {
+      if (!this.supabase.loading() && this.supabase.isAuthenticated()) {
+        clearInterval(checkAuth);
+        this.router.navigate(['/dashboard']);
+      }
+    }, 100);
+    // Stop checking after 10 seconds
+    setTimeout(() => clearInterval(checkAuth), 10000);
+  }
+
   async signIn() {
     try {
       await this.supabase.signInWithGoogle();
