@@ -1,0 +1,101 @@
+// App loading spinner
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 1rem;
+
+  .spin {
+    font-size: 3rem;
+    color: var(--mat-sys-primary);
+    animation: spin 1.5s linear infinite;
+  }
+
+  p {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Layout
+.app-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 240px;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  .material-icons {
+    font-size: 2rem;
+    color: var(--mat-sys-primary);
+  }
+
+  .app-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+mat-nav-list a.active {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+// Toolbar
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.toolbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+// User menu
+.user-menu-header {
+  padding: 0.5rem 1rem;
+  line-height: 1.5;
+  white-space: normal !important;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.role-admin { background: #e8eaf6; color: #283593; }
+.role-librarian { background: #e8f5e9; color: #2e7d32; }
+.role-member { background: #fff3e0; color: #e65100; }
+
+// Main content
+.main-content {
+  min-height: calc(100vh - 64px);
+  background: var(--mat-sys-surface);
+}
