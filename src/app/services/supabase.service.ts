@@ -31,35 +31,41 @@ export class SupabaseService {
   }
 
   private async init() {
-    // Register listener FIRST so no events are missed
-    this.supabase.auth.onAuthStateChange(async (_event, session) => {
-      this._session.set(session);
-      if (session?.user) {
-        await this.loadProfile(session.user.id);
-      } else {
-        this._profile.set(null);
-      }
-    });
-
     try {
       const { data: { session } } = await this.supabase.auth.getSession();
       this._session.set(session);
       if (session?.user) {
         await this.loadProfile(session.user.id);
       }
+    } catch (e) {
+      console.error('Session init failed:', e);
     } finally {
       this._loading.set(false);
     }
+
+    // Listen for future auth changes (login/logout/token refresh)
+    this.supabase.auth.onAuthStateChange(async (_event, session) => {
+      this._session.set(session);
+      if (session?.user) {
+        try { await this.loadProfile(session.user.id); } catch {}
+      } else {
+        this._profile.set(null);
+      }
+    });
   }
 
   private async loadProfile(userId: string) {
-    const { data } = await this.supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    if (data) {
-      this._profile.set(data as Profile);
+    try {
+      const { data } = await this.supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      if (data) {
+        this._profile.set(data as Profile);
+      }
+    } catch (e) {
+      console.error('Failed to load profile:', e);
     }
   }
 

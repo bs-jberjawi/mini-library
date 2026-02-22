@@ -3,8 +3,10 @@
     <span class="material-icons spin">local_library</span>
     <p>Loading MiniLibrary...</p>
   </div>
-} @else {
-  <router-outlet />
 }
+
+<div [hidden]="supabase.loading()">
+  <router-outlet />
+</div>
 
 <app-notifications />

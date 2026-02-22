@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -132,8 +132,10 @@ import { ChatbotComponent } from '../components/chatbot/chatbot.component';
 export class LayoutComponent {
   supabase = inject(SupabaseService);
   theme = inject(ThemeService);
+  private router = inject(Router);
 
   async signOut() {
     await this.supabase.signOut();
+    this.router.navigate(['/login']);
   }
 }
